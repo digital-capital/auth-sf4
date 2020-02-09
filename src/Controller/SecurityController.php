@@ -42,7 +42,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder){
+    public function register( UserPasswordEncoderInterface $passwordEncoder){
         $user = new User();
         $user->setEmail("amine@gmail.com");
         $user->setPassword($passwordEncoder->encodePassword(

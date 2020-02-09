@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -32,6 +34,16 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Acl",inversedBy="users")
+     */
+    private $acls;
+
+    public function __construct()
+    {
+        $this->acls = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -109,5 +121,39 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|Acl[]
+     */
+    public function getAcls(): Collection
+    {
+        return $this->acls;
+    }
+
+    public function addAcl(Acl $acl): self
+    {
+        if (!$this->acls->contains($acl)) {
+            $this->acls[] = $acl;
+        }
+
+        return $this;
+    }
+
+    public function removeAcl(Acl $acl): self
+    {
+        if ($this->acls->contains($acl)) {
+            $this->acls->removeElement($acl);
+        }
+
+        return $this;
+    }
+
+    public function hasAcl(Acl $acl)
+    {
+        if($this->acls->contains($acl)){
+            return  true;
+        }
+        return false;
     }
 }
